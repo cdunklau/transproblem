@@ -1,0 +1,4 @@
+*.py[cp]
+__pycache__
+venv
+*.egg[_-]info
