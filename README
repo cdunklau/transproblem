@@ -1,0 +1,26 @@
+i've isolated my translation problem... strings passed from the view directly
+to a response will not show up translated. this is clear because they don't get
+localized. but colander errors and field name should be translated, right?
+
+
+Steps to set up:
+
+1.  Clone the repo
+2.  Run commands:
+    virtualenv -p python3.4 venv
+    venv/bin/python setup.py develop
+    venv/bin/pserver development.ini
+3.  Open http://localhost:6543/?_LOCALE_=de
+4.  Observe that the labels for the two fields are translated ("Wert" instead
+    of "Value"), but nothing else is.
+
+Clearly the "Register for our mailing list" won't get translated because that
+comes directly from the view into the HTML... but the "Email Address" was
+provided to colander as the schema node's title, and I expect that to get
+translated. Also, the "Register" button should be translated, since I gave
+that to the form in a button.
+
+What gives?
+    
+
+
