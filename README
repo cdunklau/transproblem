@@ -22,5 +22,8 @@ that to the form in a button.
 
 What gives?
     
+Updated:
 
-
+The TranslationStringFactory's domain was set to 'transproblem', but the .mo
+files were called 'tutorial'. Changing the domain to 'tutorial' resolved the
+issue.

@@ -10,7 +10,7 @@ import deform.widget
 import colander
 
 
-_ = TranslationStringFactory('transproblem')
+_ = TranslationStringFactory('tutorial')
 
 
 class MailingSchema(colander.MappingSchema):
