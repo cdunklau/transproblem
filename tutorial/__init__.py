@@ -1,9 +1,9 @@
 from pyramid.config import Configurator
 from pyramid.response import Response
 from pyramid.i18n import TranslationStringFactory
-from pkg_resources import resource_filename
 from pyramid.i18n import get_localizer
 from pyramid.threadlocal import get_current_request
+from pkg_resources import resource_filename
 
 import deform.widget
 
@@ -18,7 +18,7 @@ class MailingSchema(colander.MappingSchema):
         colander.String(),
         validator=colander.Email(),
         title=_('Email Address'),
-        widget=deform.widget
+        widget=deform.widget.CheckedInputWidget(),
     )
 
 
@@ -27,7 +27,7 @@ def hello_world(request):
     print('Incoming request')
     form = deform.Form(
         MailingSchema(),
-        buttons=(deform.Button('submit', _('Register')),),
+        buttons=(deform.Button('submit', title=_('Register')),),
     )
     if 'submit' in request.POST:
         controls = request.POST.items()
@@ -46,15 +46,20 @@ def hello_world(request):
     return Response(body)
 
 
+def locale(request):
+    return Response(
+        '<body><h1>Detected locale: {0}</h1></body>'.format(request.locale_name))
+
+
 def main(global_config, **settings):
     config = Configurator()
-    config.add_route('hello', '/')
-    config.add_view(hello_world, route_name='hello')
+    config.include('pyramid_debugtoolbar')
 
+    config.registry.setdefault('default_locale_name', 'en')
     config.add_translation_dirs(
+        'tutorial:locale/',
         'colander:locale',
         'deform:locale',
-        'locale/'
     )
 
     def translator(term):
@@ -64,5 +69,11 @@ def main(global_config, **settings):
     zpt_renderer = deform.ZPTRendererFactory(
         [deform_template_dir], translator=translator)
     deform.Form.set_default_renderer(zpt_renderer)
+
+    config.add_route('hello', '/')
+    config.add_view(hello_world, route_name='hello')
+    config.add_route('locale', '/locale')
+    config.add_view(locale, route_name='locale')
+    config.add_static_view('static', 'static', cache_max_age=3600)
 
     return config.make_wsgi_app()

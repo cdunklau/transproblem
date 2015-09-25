@@ -2,8 +2,8 @@ from setuptools import setup
 
 requires = [
     'pyramid',
-    'deform',
-    'colander',
+    'pyramid_debugtoolbar',
+    'deform>=0.9,<1.0',
     'lingua',
     'babel',
 ]
